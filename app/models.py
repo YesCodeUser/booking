@@ -7,7 +7,7 @@ class Room(models.Model):
     number_of_seats = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.number
+        return str(self.number)
 
 
 class Booking(models.Model):
@@ -23,5 +23,5 @@ class Booking(models.Model):
     status = models.CharField(max_length=9, choices=room_status)
 
     def __str__(self):
-        return self.room, self.user, self.room_status
+        return self.user.username
 
