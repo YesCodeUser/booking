@@ -26,6 +26,13 @@ class BookingSerializer(serializers.ModelSerializer):
         departure: date = attrs["departure_date"]
         room: Room = attrs["room"]
 
+        if arrival >= departure:
+            raise serializers.ValidationError(
+                {
+                    "departure_date": "The departure date must be later than the arrival date."
+                }
+            )
+
         overlapping: bool = Booking.objects.filter(
             room=room,
             status="Booked",
