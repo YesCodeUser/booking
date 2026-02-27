@@ -15,23 +15,59 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Room',
+            name="Room",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.PositiveIntegerField(unique=True)),
-                ('price_per_day', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('number_of_seats', models.PositiveIntegerField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("number", models.PositiveIntegerField(unique=True)),
+                ("price_per_day", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("number_of_seats", models.PositiveIntegerField()),
             ],
         ),
         migrations.CreateModel(
-            name='Booking',
+            name="Booking",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('arrival_date', models.DateField()),
-                ('departure_date', models.DateField()),
-                ('status', models.CharField(choices=[('Booked', 'booked'), ('Cancelled', 'cancelled')], max_length=9)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bookings', to=settings.AUTH_USER_MODEL)),
-                ('room', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='bookings', to='app.room')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("arrival_date", models.DateField()),
+                ("departure_date", models.DateField()),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[("Booked", "booked"), ("Cancelled", "cancelled")],
+                        max_length=9,
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="bookings",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "room",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="bookings",
+                        to="app.room",
+                    ),
+                ),
             ],
         ),
     ]

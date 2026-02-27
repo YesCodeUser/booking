@@ -5,3 +5,9 @@ python-dotenv==1.2.1
 psycopg2-binary==2.9.11
 djangorestframework==3.16.1
 django-filter==25.2
+djoser==2.3.3
+djangorestframework-simplejwt==5.5.1
+drf-spectacular==0.29.0
+black==26.1.0
+ruff==0.15.4
+pytest-django==4.12.0
