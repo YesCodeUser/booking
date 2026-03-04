@@ -1,4 +1,4 @@
-from datetime import date
+from django.db import transaction
 from typing import Dict, Any
 from rest_framework import serializers
 from .models import Room
@@ -22,9 +22,15 @@ class BookingSerializer(serializers.ModelSerializer):
         read_only_fields: tuple[str] = ["user", "status"]
 
     def validate(self, attrs: Dict[str, Any]) -> Dict[str, Any]:
-        arrival: date = attrs["arrival_date"]
-        departure: date = attrs["departure_date"]
-        room: Room = attrs["room"]
+        instance = self.instance
+
+        arrival = attrs.get("arrival_date", instance.arrival_date if instance else None)
+        departure = attrs.get('departure_date', instance.departure_date if instance else None)
+        room = attrs.get('room', instance.room if instance else None)
+
+        if not all([arrival, departure, room]):
+            raise serializers.ValidationError('Missing requirements fields.')
+
 
         if arrival >= departure:
             raise serializers.ValidationError(
@@ -33,14 +39,20 @@ class BookingSerializer(serializers.ModelSerializer):
                 }
             )
 
-        overlapping: bool = Booking.objects.filter(
-            room=room,
-            status="Booked",
-            arrival_date__lt=departure,
-            departure_date__gt=arrival,
-        ).exists()
+        with transaction.atomic():
+            Room.objects.select_for_update().get(id=room.id)
 
-        if overlapping:
-            raise serializers.ValidationError({"room": "This room is already reserved"})
+            overlapping = Booking.objects.filter(
+                room=room,
+                status="Booked",
+                arrival_date__lt=departure,
+                departure_date__gt=arrival,
+            )
+
+            if instance:
+                overlapping = overlapping.exclude(pk=instance.pk)
+
+            if overlapping.exists():
+                raise serializers.ValidationError(f"Room: {room.id} is already reserved")
 
         return attrs
