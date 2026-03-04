@@ -38,6 +38,7 @@
 - POSTGRES_PASSWORD=your_password
 - POSTGRES_HOST=localhost
 - POSTGRES_PORT=5432
+- SECRET_KEY=your_secret_key
 
 ---
 
