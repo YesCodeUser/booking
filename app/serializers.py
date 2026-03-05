@@ -25,12 +25,13 @@ class BookingSerializer(serializers.ModelSerializer):
         instance = self.instance
 
         arrival = attrs.get("arrival_date", instance.arrival_date if instance else None)
-        departure = attrs.get('departure_date', instance.departure_date if instance else None)
-        room = attrs.get('room', instance.room if instance else None)
+        departure = attrs.get(
+            "departure_date", instance.departure_date if instance else None
+        )
+        room = attrs.get("room", instance.room if instance else None)
 
         if not all([arrival, departure, room]):
-            raise serializers.ValidationError('Missing requirements fields.')
-
+            raise serializers.ValidationError("Missing requirements fields.")
 
         if arrival >= departure:
             raise serializers.ValidationError(
@@ -53,6 +54,8 @@ class BookingSerializer(serializers.ModelSerializer):
                 overlapping = overlapping.exclude(pk=instance.pk)
 
             if overlapping.exists():
-                raise serializers.ValidationError(f"Room: {room.id} is already reserved")
+                raise serializers.ValidationError(
+                    f"Room: {room.id} is already reserved"
+                )
 
         return attrs

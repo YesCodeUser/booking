@@ -112,7 +112,7 @@ def test_staff_see_all_bookings(auth_super_user, super_user, user):
         status="Booked",
     )
 
-    url = '/api/bookings/'
+    url = "/api/bookings/"
     response = auth_super_user.get(url)
 
     assert Booking.objects.count() == 2
@@ -124,13 +124,13 @@ def test_staff_create_booking_to_another_user(auth_super_user, user):
     room = Room.objects.create(number=10, price_per_day=400, number_of_seats=10)
 
     data = {
-        'user': user.id,
+        "user": user.id,
         "room": room.id,
         "arrival_date": date.today(),
         "departure_date": date.today() + timedelta(days=3),
     }
 
-    url = '/api/bookings/'
+    url = "/api/bookings/"
     response = auth_super_user.post(url, data)
 
     assert response.status_code == status.HTTP_201_CREATED
@@ -150,7 +150,7 @@ def test_staff_cancel_booking_another_user(auth_super_user, user):
         status="Booked",
     )
 
-    url = f'/api/bookings/{booking.id}/'
+    url = f"/api/bookings/{booking.id}/"
     auth_super_user.delete(url)
 
     booking.refresh_from_db()
@@ -172,14 +172,14 @@ def test_staff_update_booking_another_user(auth_super_user, user, super_user):
     )
 
     data = {
-        'user': super_user.id,
-        'room': room2.id,
-        'arrival_date': date.today() + timedelta(days=10),
-        'departure_date': date.today() + timedelta(days=20),
-        'status': "Cancelled"
+        "user": super_user.id,
+        "room": room2.id,
+        "arrival_date": date.today() + timedelta(days=10),
+        "departure_date": date.today() + timedelta(days=20),
+        "status": "Cancelled",
     }
 
-    url = f'/api/bookings/{booking.id}/'
+    url = f"/api/bookings/{booking.id}/"
     response = auth_super_user.patch(url, data)
 
     booking.refresh_from_db()
@@ -189,4 +189,4 @@ def test_staff_update_booking_another_user(auth_super_user, user, super_user):
     assert booking.room == room2
     assert booking.arrival_date == date.today() + timedelta(days=10)
     assert booking.departure_date == date.today() + timedelta(days=20)
-    assert booking.status == 'Cancelled'
+    assert booking.status == "Cancelled"

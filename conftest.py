@@ -15,7 +15,7 @@ def user():
 
 @pytest.fixture
 def super_user():
-    return User.objects.create_superuser(username='admin', password='admin12345')
+    return User.objects.create_superuser(username="admin", password="admin12345")
 
 
 @pytest.fixture
